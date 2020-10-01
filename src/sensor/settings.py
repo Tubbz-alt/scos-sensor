@@ -95,6 +95,8 @@ else:
 SESSION_COOKIE_SECURE = IN_DOCKER
 CSRF_COOKIE_SECURE = IN_DOCKER
 
+JWT_PUBLIC_KEY_FILE = os.path.join(BASE_DIR, "authentication", "certs", "jwt_public_key.pem")
+
 # Application definition
 
 API_TITLE = "SCOS Sensor API"
@@ -203,10 +205,14 @@ WSGI_APPLICATION = "sensor.wsgi.application"
 REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "sensor.exceptions.exception_handler",
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.TokenAuthentication",
+        #"rest_framework.authentication.TokenAuthentication",
+        "authentication.auth.OAuthJWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+        "authentication.permissions.RequiredJWTRolePermission"
+        ),
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
@@ -291,6 +297,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = "authentication.User"
+REQUIRED_ROLE = 'ROLE_MANAGER'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -311,6 +318,7 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
     "loggers": {
         "actions": {"handlers": ["console"], "level": LOGLEVEL},
+        "authentication": {"handlers": ["console"], "level": LOGLEVEL},
         "capabilities": {"handlers": ["console"], "level": LOGLEVEL},
         "hardware": {"handlers": ["console"], "level": LOGLEVEL},
         "schedule": {"handlers": ["console"], "level": LOGLEVEL},

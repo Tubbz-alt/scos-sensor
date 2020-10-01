@@ -9,6 +9,8 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.settings import api_settings
 from rest_framework.views import APIView
 
+from authentication.permissions import TokenAuthenticationEnabledPermission
+
 from .models import User
 from .serializers import UserDetailsSerializer, UserProfileSerializer
 
@@ -35,7 +37,7 @@ class UserDetailsListView(ListCreateAPIView):
 
     queryset = User.objects.all().order_by("-date_joined")
     serializer_class = UserDetailsSerializer
-    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [IsAdminUser]
+    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [IsAdminUser] + [TokenAuthenticationEnabledPermission]
 
 
 class UserProfilesListView(ListAPIView):
