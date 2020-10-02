@@ -53,7 +53,7 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 class UserDetailsSerializer(UserProfileSerializer):
     """Private user account view."""
 
-    auth_token = serializers.SerializerMethodField()
+    # auth_token = serializers.SerializerMethodField()
     has_usable_password = serializers.SerializerMethodField()
     is_admin = serializers.SerializerMethodField()
 
@@ -63,14 +63,14 @@ class UserDetailsSerializer(UserProfileSerializer):
     class Meta(UserProfileSerializer.Meta):
         fields = UserProfileSerializer.Meta.fields + (
             "email",
-            "auth_token",
+            # "auth_token",
             "has_usable_password",
             "is_admin",
         )
-        read_only_fields = UserProfileSerializer.Meta.read_only_fields + ("auth_token",)
+        # read_only_fields = UserProfileSerializer.Meta.read_only_fields + ("auth_token",)
 
-    def get_auth_token(self, obj):
-        return obj.auth_token.key
+    # def get_auth_token(self, obj):
+    #     return obj.auth_token.key
 
     def get_has_usable_password(self, obj):
         return obj.has_usable_password()

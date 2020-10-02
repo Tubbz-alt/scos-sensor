@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
-from .utils import token_auth_enabled
+from .auth import token_auth_enabled
 
 class User(AbstractUser):
     """A user of the sensor."""

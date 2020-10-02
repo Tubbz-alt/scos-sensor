@@ -37,7 +37,7 @@ class UserDetailsListView(ListCreateAPIView):
 
     queryset = User.objects.all().order_by("-date_joined")
     serializer_class = UserDetailsSerializer
-    permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES + [IsAdminUser] + [TokenAuthenticationEnabledPermission]
+    #permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES
 
 
 class UserProfilesListView(ListAPIView):

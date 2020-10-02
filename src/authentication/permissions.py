@@ -1,7 +1,6 @@
 from rest_framework import permissions
 from django.conf import settings
-from .utils import jwt_request_has_required_role, token_auth_enabled, oauth_jwt_authentication_enabled
-
+from .auth import token_auth_enabled, oauth_jwt_authentication_enabled, jwt_request_has_required_role
 
 class TokenAuthenticationEnabledPermission(permissions.BasePermission):
     message = "Token Authentication is not enabled"
@@ -9,8 +8,12 @@ class TokenAuthenticationEnabledPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         return token_auth_enabled
 
-class RequiredJWTRolePermission(permissions.BasePermission):
+class RequiredJWTRolePermissionOrIsSuperuser(permissions.BasePermission):
     message = "User missing required role"
 
     def has_permission(self, request, view):
-        return oauth_jwt_authentication_enabled and jwt_request_has_required_role(request)
+        if oauth_jwt_authentication_enabled and jwt_request_has_required_role(request):
+            return True
+        if request.user.is_superuser:
+            return True
+        return False
